@@ -137,6 +137,39 @@ const auth = {
     }
   },
 
+  activate: async (req, res) => {
+    const { token } = req.params;
+
+    if (!token) {
+      return res.render('auth/views/activate', { status: 'failed', message: 'Token tidak valid' });
+    }
+
+    try {
+      const apiResponse = await axios.get(`${API_BASE_URL}/activate/${encodeURIComponent(token)}`, {
+        withCredentials: true
+      });
+
+      if (apiResponse.data.status === 'success') {
+        return res.render('auth/views/activate', {
+          status: 'success',
+          message: 'Akun Anda berhasil diaktifkan! Silakan login.'
+        });
+      }
+
+      return res.render('auth/views/activate', {
+        status: 'failed',
+        message: apiResponse.data.message || 'Gagal mengaktifkan akun'
+      });
+    } catch (error) {
+      console.error('Activation error:', error);
+      const message = error.response?.data?.message || 'Gagal mengaktifkan akun. Silakan coba lagi.';
+      return res.render('auth/views/activate', {
+        status: 'failed',
+        message: message
+      });
+    }
+  },
+
   logout: (req, res) => {
     req.session.destroy((err) => {
       if (err) {

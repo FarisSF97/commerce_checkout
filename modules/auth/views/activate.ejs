@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aktivasi Akun</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .activate-container {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .activate-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+    .activate-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .activate-message {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    .btn-login {
+      display: inline-block;
+      background: #28a745;
+      color: white;
+      padding: 14px 40px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      transition: background 0.2s;
+    }
+    .btn-login:hover {
+      background: #218838;
+    }
+    .status-failed .activate-icon {
+      color: #dc3545;
+    }
+    .status-failed .activate-title {
+      color: #dc3545;
+    }
+    .status-success .activate-icon {
+      color: #28a745;
+    }
+    .status-success .activate-title {
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="activate-container <%= status === 'success' ? 'status-success' : 'status-failed' %>">
+    <div class="activate-icon">
+      <%= status === 'success' ? '✓' : '✕' %>
+    </div>
+    <h1 class="activate-title">
+      <%= status === 'success' ? 'Aktivasi Berhasil' : 'Aktivasi Gagal' %>
+    </h1>
+    <p class="activate-message"><%= message %></p>
+    <a href="/login" class="btn-login">Login</a>
+  </div>
+</body>
+</html>

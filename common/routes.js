@@ -33,6 +33,10 @@ router.get("/atm_va", async (req, res) => {
 });
 
 // Auth routes
+router.get("/activate/:token", async (req, res) => {
+  auth.activate(req, res);
+});
+
 router.get("/login", (req, res) => {
   auth.login(req, res);
 });
