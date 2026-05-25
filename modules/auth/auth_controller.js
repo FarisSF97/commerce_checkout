@@ -170,6 +170,63 @@ const auth = {
     }
   },
 
+  forgotPassword: (req, res) => {
+    res.render('auth/views/forgot_password');
+  },
+
+  processForgotPassword: async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ status: 'failed', message: 'Email diperlukan' });
+    }
+
+    try {
+      const apiResponse = await axios.post(`${API_BASE_URL}/forgot_password`, { email }, {
+        withCredentials: true
+      });
+
+      return res.json(apiResponse.data);
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      return res.status(error.response?.status || 500).json({
+        status: 'failed',
+        message: error.response?.data?.message || 'Gagal memproses'
+      });
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    const { token } = req.params;
+    res.render('auth/views/reset_password', { token });
+  },
+
+  processResetPassword: async (req, res) => {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.status(400).json({ status: 'failed', message: 'Token dan password diperlukan' });
+    }
+
+    if (password.length < 4) {
+      return res.status(400).json({ status: 'failed', message: 'Password minimal 4 karakter' });
+    }
+
+    try {
+      const apiResponse = await axios.post(`${API_BASE_URL}/reset_password`, { token, password }, {
+        withCredentials: true
+      });
+
+      return res.json(apiResponse.data);
+    } catch (error) {
+      console.error('Reset password error:', error);
+      return res.status(error.response?.status || 500).json({
+        status: 'failed',
+        message: error.response?.data?.message || 'Gagal mereset password'
+      });
+    }
+  },
+
   logout: (req, res) => {
     req.session.destroy((err) => {
       if (err) {
