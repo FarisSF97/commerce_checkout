@@ -82,11 +82,53 @@ const auth = {
     }
   },
 
-  account: (req, res) => {
+  account: async (req, res) => {
     if (!req.session.user) {
       return res.redirect('/login');
     }
-    res.render('auth/views/account', { user: req.session.user });
+
+    const user = req.session.user;
+    let orders = [];
+
+    try {
+      const ordersRes = await axios.get(`${API_BASE_URL}/get_orders/${user.id}`, {
+        withCredentials: true
+      });
+      orders = ordersRes.data.status === 'success' ? ordersRes.data.data : [];
+    } catch (error) {
+      console.error('Fetch orders error:', error);
+    }
+
+    res.render('auth/views/account', { user, orders });
+  },
+
+  cancelOrder: async (req, res) => {
+    if (!req.session.user) {
+      return res.status(401).json({ status: 'failed', message: 'Silakan login terlebih dahulu' });
+    }
+
+    const { order_id } = req.body;
+    const account_id = req.session.user.id;
+
+    if (!order_id) {
+      return res.status(400).json({ status: 'failed', message: 'order_id diperlukan' });
+    }
+
+    try {
+      const apiResponse = await axios.post(`${API_BASE_URL}/cancel_order/${order_id}`, {
+        account_id
+      }, {
+        withCredentials: true
+      });
+
+      return res.json(apiResponse.data);
+    } catch (error) {
+      console.error('Cancel order error:', error);
+      return res.status(error.response?.status || 500).json({
+        status: 'failed',
+        message: error.response?.data?.message || 'Gagal cancel pesanan'
+      });
+    }
   },
 
   changePassword: async (req, res) => {

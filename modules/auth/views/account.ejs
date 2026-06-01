@@ -1,227 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Details - Telegram Booster</title>
-    <script src="https://kit.fontawesome.com/bba4075092.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="/assets/css/styles_index.css">
-    <style>
-        .account-container {
-            max-width: 600px;
-            margin: 100px auto;
-            padding: 40px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .account-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .account-header h2 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .account-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
-        }
-        .account-section h3 {
-            color: #495057;
-            margin-bottom: 15px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .account-section h3 i {
-            color: #007bff;
-        }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #dee2e6;
-        }
-        .info-row:last-child {
-            border-bottom: none;
-        }
-        .info-label {
-            font-weight: 500;
-            color: #6c757d;
-        }
-        .info-value {
-            color: #333;
-            font-weight: 400;
-        }
-        .card-number {
-            font-family: monospace;
-            letter-spacing: 2px;
-        }
-        .logout-btn {
-            width: 100%;
-            padding: 12px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .logout-btn:hover {
-            background: #c82333;
-        }
-        .back-btn {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 8px 16px;
-            background: #6c757d;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .back-btn:hover {
-            background: #5a6268;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account - Telegram Booster</title>
+  <link rel="stylesheet" href="/assets/css/styles_index.css">
+  <script src="https://kit.fontawesome.com/bba4075092.js" crossorigin="anonymous"></script>
+  <style>
+    .page-container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .page-header h1 { font-size: 24px; color: #333; }
+    .page-header a { color: #dc3545; text-decoration: none; font-weight: 600; padding: 8px 20px; border: 1px solid #dc3545;
+      border-radius: 6px; transition: all 0.2s; font-size: 14px; }
+    .page-header a:hover { background: #dc3545; color: white; }
+
+    .tabs { display: flex; gap: 0; margin-bottom: 0; background: white; border-radius: 12px 12px 0 0;
+      overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .tab-btn { flex: 1; padding: 16px; text-align: center; border: none; background: white; cursor: pointer;
+      font-size: 15px; font-weight: 600; color: #666; transition: all 0.2s; border-bottom: 3px solid transparent; }
+    .tab-btn:hover { color: #333; }
+    .tab-btn.active { color: #007bff; border-bottom-color: #007bff; }
+
+    .tab-content { background: white; border-radius: 0 0 12px 12px; padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08); display: none; }
+    .tab-content.active { display: block; }
+
+    .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { font-weight: 600; color: #666; }
+    .info-value { color: #333; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 14px; }
+    .form-group input { width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; }
+    .form-group input:focus { outline: none; border-color: #007bff; }
+    .btn-primary { padding: 12px 30px; background: #007bff; color: white; border: none; border-radius: 8px;
+      font-size: 15px; font-weight: 600; cursor: pointer; }
+    .btn-primary:hover { background: #0056b3; }
+
+    .order-table { width: 100%; border-collapse: collapse; }
+    .order-table th { text-align: left; padding: 12px 8px; border-bottom: 2px solid #dee2e6;
+      color: #666; font-size: 13px; font-weight: 600; }
+    .order-table td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 14px; }
+    .order-table tr:hover { background: #f8f9fa; }
+    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-paid { background: #d4edda; color: #155724; }
+    .status-cancel { background: #f8d7da; color: #721c24; }
+    .btn-cancel { padding: 6px 14px; background: #dc3545; color: white; border: none; border-radius: 6px;
+      font-size: 13px; cursor: pointer; }
+    .btn-cancel:hover { background: #c82333; }
+    .btn-cancel:disabled { background: #ccc; cursor: not-allowed; }
+    .empty-state { text-align: center; padding: 40px; color: #999; }
+    .empty-state i { font-size: 48px; margin-bottom: 16px; }
+  </style>
 </head>
 <body>
-    <div class="account-container">
-        <div class="account-header">
-            <h2>Account Details</h2>
-            <p>Welcome back, <%= user.name %>!</p>
-        </div>
-        
-        <div class="account-section">
-            <h3><i class="fas fa-user"></i> Personal Information</h3>
-            <div class="info-row">
-                <span class="info-label">Name:</span>
-                <span class="info-value"><%= user.name %></span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Email:</span>
-                <span class="info-value"><%= user.email %></span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">WhatsApp:</span>
-                <span class="info-value"><%= user.whatsapp %></span>
-            </div>
-        </div>
-        
-        <!-- <div class="account-section">
-            <h3><i class="fas fa-credit-card"></i> Payment Information</h3>
-            <% if (user.card && user.card.name) { %>
-            <div class="info-row">
-                <span class="info-label">Card Name:</span>
-                <span class="info-value"><%= user.card.name %></span>
-            </div>
-            <% if (user.card && user.card.number) { %>
-            <div class="info-row">
-                <span class="info-label">Card Number:</span>
-                <span class="info-value card-number">**** **** **** <%= user.card.number %></span>
-            </div>
-            <% } %>
-            <% if (user.card && user.card.expiry) { %>
-            <div class="info-row">
-                <span class="info-label">Expiry Date:</span>
-                <span class="info-value card-number"><%= user.card.expiry.slice(0,2) %>/<%= user.card.expiry.slice(2) %></span>
-            </div>
-            <% } %>
-            <% } else { %>
-            <div class="info-row">
-                <span class="info-label">Card:</span>
-                <span class="info-value">No card on file</span>
-            </div>
-            <% } %>
-        </div> -->
-        
-        <div class="account-section">
-            <h3><i class="fas fa-key"></i> Ubah Password</h3>
-            <form id="changePasswordForm">
-                <div class="info-row">
-                    <span class="info-label">Password Baru:</span>
-                    <input type="password" id="newPassword" class="info-input" placeholder="Masukkan password baru" required>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Konfirmasi:</span>
-                    <input type="password" id="confirmPassword" class="info-input" placeholder="Konfirmasi password baru" required>
-                </div>
-                <button type="submit" class="auth-btn" style="margin-top: 10px;">Simpan Password</button>
-            </form>
-            <div id="password-message" style="display: none; margin-top: 10px;"></div>
-        </div>
-        
-        <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
-        <form action="/logout" method="GET">
-            <button type="submit" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </form>
+  <div class="page-container">
+    <div class="page-header">
+      <h1>Account</h1>
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
-    
-    <script>
-        document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const messageDiv = document.getElementById('password-message');
-            const submitBtn = this.querySelector('button[type="submit"]');
-            
-            if (newPassword !== confirmPassword) {
-                messageDiv.style.display = 'block';
-                messageDiv.style.color = 'red';
-                messageDiv.textContent = 'Password tidak cocok!';
-                return;
-            }
-            
-            if (newPassword.length < 4) {
-                messageDiv.style.display = 'block';
-                messageDiv.style.color = 'red';
-                messageDiv.textContent = 'Password minimal 4 karakter!';
-                return;
-            }
-            
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Menyimpan...';
-            
-            try {
-                const response = await fetch('/process_change_password', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: newPassword }),
-                    credentials: 'include'
-                });
-                
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    messageDiv.style.display = 'block';
-                    messageDiv.style.color = 'green';
-                    messageDiv.textContent = 'Password berhasil diubah!';
-                    document.getElementById('newPassword').value = '';
-                    document.getElementById('confirmPassword').value = '';
-                } else {
-                    messageDiv.style.display = 'block';
-                    messageDiv.style.color = 'red';
-                    messageDiv.textContent = data.message || 'Gagal ubah password';
-                }
-            } catch (error) {
-                messageDiv.style.display = 'block';
-                messageDiv.style.color = 'red';
-                messageDiv.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Simpan Password';
-            }
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="info"><i class="fas fa-user"></i> Info Akun</button>
+      <button class="tab-btn" data-tab="security"><i class="fas fa-shield-alt"></i> Keamanan Akun</button>
+      <button class="tab-btn" data-tab="orders"><i class="fas fa-shopping-cart"></i> Riwayat Pesanan</button>
+    </div>
+
+    <div class="tab-content active" id="tab-info">
+      <div class="info-row">
+        <span class="info-label">Nama</span>
+        <span class="info-value"><%= user.name %></span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Email</span>
+        <span class="info-value"><%= user.email %></span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">WhatsApp</span>
+        <span class="info-value"><%= user.whatsapp || '-' %></span>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-security">
+      <h3 style="margin-bottom: 20px; color: #495057;"><i class="fas fa-key"></i> Ubah Password</h3>
+      <form id="changePasswordForm" style="max-width: 400px;">
+        <div class="form-group">
+          <label for="newPassword">Password Baru</label>
+          <input type="password" id="newPassword" placeholder="Minimal 4 karakter" minlength="4" required>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Konfirmasi Password</label>
+          <input type="password" id="confirmPassword" placeholder="Ketik ulang password" required>
+        </div>
+        <button type="submit" class="btn-primary">Simpan Password</button>
+        <div id="password-message" style="display: none; margin-top: 12px; padding: 12px; border-radius: 8px; font-size: 14px;"></div>
+      </form>
+    </div>
+
+    <div class="tab-content" id="tab-orders">
+      <% if (typeof orders === 'undefined' || orders.length === 0) { %>
+        <div class="empty-state">
+          <i class="fas fa-shopping-bag"></i>
+          <p>Belum ada pesanan.</p>
+        </div>
+      <% } else { %>
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>Invoice</th>
+              <th>Produk</th>
+              <th>Qty</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(function(order) { %>
+              <tr>
+                <td><%= order.invoice %></td>
+                <td><%= order.product_name %></td>
+                <td><%= order.qty %></td>
+                <td>Rp<%= parseInt(order.total).toLocaleString('id-ID') %></td>
+                <td>
+                  <span class="status-badge status-<%= order.status %>">
+                    <%= order.status === 'pending' ? 'Pending' : order.status === 'paid' ? 'Lunas' : 'Cancel' %>
+                  </span>
+                </td>
+                <td>
+                  <% if (order.status === 'pending') { %>
+                    <form class="cancel-form" data-order-id="<%= order.id %>">
+                      <button type="submit" class="btn-cancel">Cancel</button>
+                    </form>
+                  <% } else { %>
+                    -
+                  <% } %>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+      });
+    });
+
+    document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const msg = document.getElementById('password-message');
+      const btn = this.querySelector('button[type="submit"]');
+      msg.style.display = 'none';
+      if (newPassword !== confirmPassword) {
+        msg.style.display = 'block'; msg.style.background = '#f8d7da'; msg.style.color = '#721c24';
+        msg.textContent = 'Password tidak cocok!'; return;
+      }
+      if (newPassword.length < 4) {
+        msg.style.display = 'block'; msg.style.background = '#f8d7da'; msg.style.color = '#721c24';
+        msg.textContent = 'Password minimal 4 karakter!'; return;
+      }
+      btn.disabled = true; btn.textContent = 'Menyimpan...';
+      try {
+        const response = await fetch('/process_change_password', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: newPassword }), credentials: 'include'
         });
-    </script>
+        const data = await response.json();
+        if (data.status === 'success') {
+          msg.style.display = 'block'; msg.style.background = '#d4edda'; msg.style.color = '#155724';
+          msg.textContent = 'Password berhasil diubah!';
+          document.getElementById('newPassword').value = '';
+          document.getElementById('confirmPassword').value = '';
+        } else {
+          msg.style.display = 'block'; msg.style.background = '#f8d7da'; msg.style.color = '#721c24';
+          msg.textContent = data.message || 'Gagal ubah password';
+        }
+      } catch (error) {
+        msg.style.display = 'block'; msg.style.background = '#f8d7da'; msg.style.color = '#721c24';
+        msg.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
+      } finally {
+        btn.disabled = false; btn.textContent = 'Simpan Password';
+      }
+    });
+
+    document.querySelectorAll('.cancel-form').forEach(form => {
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        if (!confirm('Yakin ingin cancel pesanan ini?')) return;
+        const orderId = this.dataset.orderId;
+        const btn = this.querySelector('.btn-cancel');
+        btn.disabled = true; btn.textContent = 'Memproses...';
+        try {
+          const response = await fetch('/process_cancel_order', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: orderId }), credentials: 'include'
+          });
+          const data = await response.json();
+          if (data.status === 'success') { location.reload(); }
+          else { alert(data.message || 'Gagal cancel pesanan'); btn.disabled = false; btn.textContent = 'Cancel'; }
+        } catch (error) {
+          alert('Terjadi kesalahan. Silakan coba lagi.');
+          btn.disabled = false; btn.textContent = 'Cancel';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
