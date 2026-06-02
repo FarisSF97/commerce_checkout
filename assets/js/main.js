@@ -235,30 +235,6 @@ function showFallbackProducts() {
   attachProductCardListeners();
 }
 
-async function hit_api_check_valid(phoneNumber) {
-  try {
-    console.log('Validating WhatsApp number:', phoneNumber);
-    const response = await fetch(`${API_BASE_URL}/check_valid/${phoneNumber}`);
-    console.log('Response status:', response.status);
-    console.log('Response headers:', response.headers);
-
-    const text = await response.text();
-    console.log('Raw response:', text);
-
-    try {
-      const result = JSON.parse(text);
-      console.log('Parsed JSON:', result);
-      return result;
-    } catch (parseError) {
-      console.error('Failed to parse JSON:', parseError);
-      console.error('Response was not JSON, received:', text.substring(0, 200));
-      return { valid: false, error: 'Invalid JSON response', rawResponse: text };
-    }
-  } catch (error) {
-    console.error('Error validating WhatsApp number:', error);
-    return { valid: false, error: 'API error' };
-  }
-}
 
 async function hit_api_checkout() {
   let url = window.location.pathname.split('/');
@@ -582,95 +558,12 @@ if (expiryInput) {
 }
 
 if (whatsappInput) {
-  const validationMessage = document.createElement('span');
-  validationMessage.className = 'validation-message';
-  validationMessage.style.fontSize = '12px';
-  validationMessage.style.marginLeft = '8px';
-  validationMessage.style.fontWeight = 'normal';
-
-  const whatsappLabel = document.querySelector('label[for="whatsapp"]');
-  if (whatsappLabel) {
-    whatsappLabel.appendChild(validationMessage);
-  }
-
-  whatsappInput.addEventListener("blur", async (e) => {
-    const phoneNumber = e.target.value.replace(/\D/g, "");
-
-    if (phoneNumber.length < 10) {
-      e.target.style.borderColor = "#e74c3c";
-      e.target.setCustomValidity("Nomor WhatsApp minimal 10 digit");
-      validationMessage.textContent = " - Minimal 10 digit";
-      validationMessage.style.color = "#e74c3c";
-      return;
-    }
-
-    if (phoneNumber.length > 15) {
-      e.target.style.borderColor = "#e74c3c";
-      e.target.setCustomValidity("Nomor WhatsApp maksimal 15 digit");
-      validationMessage.textContent = " - Maksimal 15 digit";
-      validationMessage.style.color = "#e74c3c";
-      return;
-    }
-
-    validationMessage.textContent = " - Memvalidasi...";
-    validationMessage.style.color = "#f39c12";
-
-    const validationResult = await hit_api_check_valid(phoneNumber);
-    console.log('Validation result:', validationResult);
-
-    let isValid = false;
-    if (validationResult && typeof validationResult === 'object') {
-      if (validationResult.valid === true ||
-          validationResult.status === 'valid' ||
-          validationResult.isValid === true ||
-          validationResult.success === true ||
-          validationResult.message === 'valid') {
-        isValid = true;
-      }
-    } else if (validationResult === true || validationResult === 'valid') {
-      isValid = true;
-    }
-
-    console.log('Is valid:', isValid);
-
-    if (isValid) {
-      e.target.style.borderColor = "#27ae60";
-      e.target.setCustomValidity("");
-      validationMessage.textContent = " - Valid";
-      validationMessage.style.color = "#27ae60";
-    } else {
-      e.target.style.borderColor = "#e74c3c";
-      e.target.setCustomValidity("Nomor WhatsApp tidak valid");
-      validationMessage.textContent = " - Invalid";
-      validationMessage.style.color = "#e74c3c";
-    }
-  });
-
-  whatsappInput.addEventListener("focus", (e) => {
-    e.target.style.borderColor = "";
-    e.target.setCustomValidity("");
-    validationMessage.textContent = "";
-  });
-
   whatsappInput.addEventListener("input", (e) => {
     let value = e.target.value.replace(/\D/g, "");
-
     if (value.length > 15) {
       value = value.substring(0, 15);
     }
-
-    let formattedValue = value;
-    if (value.length >= 4 && value.length <= 8) {
-      formattedValue = value.substring(0, 4) + "-" + value.substring(4);
-    } else if (value.length > 8) {
-      formattedValue = value.substring(0, 4) + "-" + value.substring(4, 8) + "-" + value.substring(8);
-    }
-
-    e.target.value = formattedValue;
-
-    if (validationMessage) {
-      validationMessage.textContent = "";
-    }
+    e.target.value = value;
   });
 }
 

@@ -162,7 +162,7 @@ const processBankPayment = async (req, res) => {
         const invoiceNumber = apiData.invoice || '';
 
         // Payment deadline: 24 hours from now
-        const deadline = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        const deadline = new Date(Date.now() + 1 * 60 * 60 * 1000);
         const deadlineStr = deadline.toLocaleDateString('id-ID', {
             day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
         });
