@@ -69,12 +69,4 @@ router.get("/account", (req, res) => {
   auth.account(req, res);
 });
 
-router.post("/process_change_password", (req, res) => {
-  auth.changePassword(req, res);
-});
-
-router.post("/process_cancel_order", async (req, res) => {
-  auth.cancelOrder(req, res);
-});
-
 module.exports = router;

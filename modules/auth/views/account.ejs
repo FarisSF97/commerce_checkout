@@ -53,6 +53,15 @@
     .btn-cancel:disabled { background: #ccc; cursor: not-allowed; }
     .empty-state { text-align: center; padding: 40px; color: #999; }
     .empty-state i { font-size: 48px; margin-bottom: 16px; }
+
+    .redirect-box { text-align: center; padding: 50px 20px; }
+    .redirect-box i { font-size: 48px; color: #6c757d; margin-bottom: 16px; }
+    .redirect-box h3 { color: #333; margin-bottom: 8px; }
+    .redirect-box p { color: #666; margin-bottom: 20px; font-size: 14px; }
+    .btn-member { display: inline-block; padding: 12px 30px; background: #007bff; color: white;
+      border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: background 0.2s; }
+    .btn-member:hover { background: #0056b3; }
   </style>
 </head>
 <body>
@@ -89,65 +98,21 @@
     </div>
 
     <div class="tab-content" id="tab-security">
-      <h3 style="margin-bottom: 20px; color: #495057;"><i class="fas fa-key"></i> Ubah Password</h3>
-      <form id="changePasswordForm" style="max-width: 400px;">
-        <div class="form-group">
-          <label for="newPassword">Password Baru</label>
-          <input type="password" id="newPassword" placeholder="Minimal 4 karakter" minlength="4" required>
-        </div>
-        <div class="form-group">
-          <label for="confirmPassword">Konfirmasi Password</label>
-          <input type="password" id="confirmPassword" placeholder="Ketik ulang password" required>
-        </div>
-        <button type="submit" class="btn-primary">Simpan Password</button>
-        <div id="password-message" style="display: none; margin-top: 12px; padding: 12px; border-radius: 8px; font-size: 14px;"></div>
-      </form>
+      <div class="redirect-box">
+        <i class="fas fa-shield-alt"></i>
+        <h3>Keamanan Akun</h3>
+        <p>Untuk mengubah password dan mengelola keamanan akun, silakan login di Member Area.</p>
+        <a href="http://localhost:4500/login" class="btn-member"><i class="fas fa-external-link-alt"></i> Member Area</a>
+      </div>
     </div>
 
     <div class="tab-content" id="tab-orders">
-      <% if (typeof orders === 'undefined' || orders.length === 0) { %>
-        <div class="empty-state">
-          <i class="fas fa-shopping-bag"></i>
-          <p>Belum ada pesanan.</p>
-        </div>
-      <% } else { %>
-        <table class="order-table">
-          <thead>
-            <tr>
-              <th>Invoice</th>
-              <th>Produk</th>
-              <th>Qty</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% orders.forEach(function(order) { %>
-              <tr>
-                <td><%= order.invoice %></td>
-                <td><%= order.product_name %></td>
-                <td><%= order.qty %></td>
-                <td>Rp<%= parseInt(order.total).toLocaleString('id-ID') %></td>
-                <td>
-                  <span class="status-badge status-<%= order.status %>">
-                    <%= order.status === 'pending' ? 'Pending' : order.status === 'paid' ? 'Lunas' : 'Cancel' %>
-                  </span>
-                </td>
-                <td>
-                  <% if (order.status === 'pending') { %>
-                    <form class="cancel-form" data-order-id="<%= order.id %>">
-                      <button type="submit" class="btn-cancel">Cancel</button>
-                    </form>
-                  <% } else { %>
-                    -
-                  <% } %>
-                </td>
-              </tr>
-            <% }); %>
-          </tbody>
-        </table>
-      <% } %>
+      <div class="redirect-box">
+        <i class="fas fa-shopping-cart"></i>
+        <h3>Riwayat Pesanan</h3>
+        <p>Untuk melihat riwayat pesanan dan melakukan cancel pesanan, silakan login di Member Area.</p>
+        <a href="http://localhost:4500/login" class="btn-member"><i class="fas fa-external-link-alt"></i> Member Area</a>
+      </div>
     </div>
   </div>
 
@@ -158,67 +123,6 @@
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         this.classList.add('active');
         document.getElementById('tab-' + this.dataset.tab).classList.add('active');
-      });
-    });
-
-    document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const newPassword = document.getElementById('newPassword').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-      const msg = document.getElementById('password-message');
-      const btn = this.querySelector('button[type="submit"]');
-      msg.style.display = 'none';
-      if (newPassword !== confirmPassword) {
-        msg.style.display = 'block'; msg.style.background = '#f8d7da'; msg.style.color = '#721c24';
-        msg.textContent = 'Password tidak cocok!'; return;
-      }
-      if (newPassword.length < 4) {
-        msg.style.display = 'block'; msg.style.background = '#f8d7da'; msg.style.color = '#721c24';
-        msg.textContent = 'Password minimal 4 karakter!'; return;
-      }
-      btn.disabled = true; btn.textContent = 'Menyimpan...';
-      try {
-        const response = await fetch('/process_change_password', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: newPassword }), credentials: 'include'
-        });
-        const data = await response.json();
-        if (data.status === 'success') {
-          msg.style.display = 'block'; msg.style.background = '#d4edda'; msg.style.color = '#155724';
-          msg.textContent = 'Password berhasil diubah!';
-          document.getElementById('newPassword').value = '';
-          document.getElementById('confirmPassword').value = '';
-        } else {
-          msg.style.display = 'block'; msg.style.background = '#f8d7da'; msg.style.color = '#721c24';
-          msg.textContent = data.message || 'Gagal ubah password';
-        }
-      } catch (error) {
-        msg.style.display = 'block'; msg.style.background = '#f8d7da'; msg.style.color = '#721c24';
-        msg.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
-      } finally {
-        btn.disabled = false; btn.textContent = 'Simpan Password';
-      }
-    });
-
-    document.querySelectorAll('.cancel-form').forEach(form => {
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        if (!confirm('Yakin ingin cancel pesanan ini?')) return;
-        const orderId = this.dataset.orderId;
-        const btn = this.querySelector('.btn-cancel');
-        btn.disabled = true; btn.textContent = 'Memproses...';
-        try {
-          const response = await fetch('/process_cancel_order', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ order_id: orderId }), credentials: 'include'
-          });
-          const data = await response.json();
-          if (data.status === 'success') { location.reload(); }
-          else { alert(data.message || 'Gagal cancel pesanan'); btn.disabled = false; btn.textContent = 'Cancel'; }
-        } catch (error) {
-          alert('Terjadi kesalahan. Silakan coba lagi.');
-          btn.disabled = false; btn.textContent = 'Cancel';
-        }
       });
     });
   </script>
