@@ -49,7 +49,7 @@ const auth = {
       if (password !== confirmPassword) {
         return res.status(400).json({
           status: 'failed',
-          message: 'Passwords do not match'
+          message: 'Password tidak sama!'
         });
       }
       
@@ -107,7 +107,7 @@ const auth = {
       if (apiResponse.data.status === 'success') {
         return res.render('auth/views/activate', {
           status: 'success',
-          message: 'Akun Anda berhasil diaktifkan! Silakan login.'
+          message: 'Akun Anda sudah aktif! Silakan login kembali.'
         });
       }
 
