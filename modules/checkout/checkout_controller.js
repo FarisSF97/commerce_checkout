@@ -44,7 +44,7 @@ const processPayment = async (req, res) => {
         const checkoutPayload = {
             nama: cardName || email.split('@')[0],
             email: email,
-            no_wa: whatsapp || '',
+            no_wa: (whatsapp || '').trim(),
             password: '',
             payment_method: 'card',
             product_id: productSlug,
@@ -137,7 +137,7 @@ const processBankPayment = async (req, res) => {
         const checkoutPayload = {
             nama: nama || email.split('@')[0],
             email: email,
-            no_wa: whatsapp || '',
+            no_wa: (whatsapp || '').trim(),
             password: generateRandomPassword(8),
             payment_method: paymentMethod || 'bank_transfer',
             product_id: productSlug,
