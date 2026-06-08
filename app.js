@@ -11,10 +11,11 @@ app.use(express.json()); // Parse JSON request bodies
 // Session middleware
 app.use(
   session({
+    name: "page.sid",
     secret: process.env.SESSION_SECRET || "default-secret-change-in-production",
-    resave: false,
+    resave: true,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }, // 24 hours
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000, sameSite: "lax" },
   }),
 );
 
