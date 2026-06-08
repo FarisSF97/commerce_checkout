@@ -64,8 +64,7 @@ const auth = {
       });
       
       if (apiResponse.data.status === 'success') {
-        req.session.user = apiResponse.data.data;
-        return res.json({ status: 'success', message: 'Registration successful' });
+        return res.json({ status: 'success', message: 'Registrasi berhasil! Silakan cek email untuk aktivasi akun.' });
       }
       
       return res.status(apiResponse.data.code || 400).json({

@@ -154,8 +154,12 @@
                 const data = await response.json();
                 
                 if (data.status === 'success') {
-                    // Registration successful, redirect to home
-                    window.location.href = '/';
+                    errorDiv.style.color = 'green';
+                    errorDiv.textContent = data.message || 'Registrasi berhasil! Silakan cek email.';
+                    errorDiv.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 3000);
                 } else {
                     // Show error message
                     errorDiv.textContent = data.message || 'Registration failed';
