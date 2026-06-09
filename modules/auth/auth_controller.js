@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 
-const API_BASE_URL = 'http://localhost:5100';
+const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:5100';
 
 const auth = {
   login: (req, res) => {
@@ -88,7 +88,8 @@ const auth = {
 
     const user = req.session.user;
 
-    res.render('auth/views/account', { user });
+    const memberBaseUrl = process.env.MEMBER_BASE_URL || 'http://localhost:4500';
+    res.render('auth/views/account', { user, memberBaseUrl });
   },
 
   activate: async (req, res) => {

@@ -29,7 +29,7 @@ let originalProductData = null;
 let selectedPaymentMethod = null;
 
 // API Base URL
-const API_BASE_URL = 'http://localhost:5100';
+const API_BASE_URL = window.API_BASE_URL || 'http://localhost:5100';
 
 async function fetchLifetimeProduct() {
   if (!isLifetime || !currentLifetimeSlug) {
