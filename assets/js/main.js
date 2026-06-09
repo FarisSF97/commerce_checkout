@@ -645,6 +645,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   pmItems.forEach(item => {
     item.addEventListener('click', function () {
+      if (this.classList.contains('disabled')) return;
+
       const span = this.querySelector('span');
       const label = span ? span.textContent.trim() : '';
 

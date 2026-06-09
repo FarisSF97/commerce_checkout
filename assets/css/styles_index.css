@@ -453,6 +453,39 @@ body {
   box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.3);
 }
 
+.pm-item.disabled {
+  position: relative;
+  opacity: 0.6;
+  cursor: not-allowed;
+  overflow: hidden;
+}
+
+.pm-item.disabled:hover {
+  border-color: #e0e0e0;
+  box-shadow: none;
+}
+
+.coming-soon-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.65);
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.pm-item.disabled:hover .coming-soon-overlay {
+  opacity: 1;
+}
+
 .pay-button:disabled {
   background: #ccc;
   cursor: not-allowed;
