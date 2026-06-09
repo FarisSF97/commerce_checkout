@@ -16,6 +16,18 @@ router.post("/process_bank", async (req, res) => {
   checkout.processBankPayment(req, res);
 });
 
+router.post("/process_qris", async (req, res) => {
+  checkout.processQrisPayment(req, res);
+});
+
+router.get("/qris-payment", async (req, res) => {
+  checkout.qrisPaymentPage(req, res);
+});
+
+router.get("/qris-status/:order_id", async (req, res) => {
+  checkout.qrisCheckStatus(req, res);
+});
+
 router.get("/thankyou", async (req, res) => {
   checkout.thankYou(req, res);
 });

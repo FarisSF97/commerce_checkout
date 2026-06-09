@@ -632,8 +632,47 @@ if (payButton) {
         payButton.textContent = 'Bayar';
         payButton.disabled = false;
       }
+    } else if (selectedPaymentMethod === 'QRIS') {
+      const payload = {
+        nama: name,
+        email,
+        whatsapp,
+        productSlug,
+        productName: displayPlan,
+        quantity,
+        subtotal,
+        discount: currentDiscount,
+        totalPrice: finalPrice,
+        isLifetime,
+        kupon: couponCode
+      };
+
+      try {
+        const response = await fetch('/process_qris', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.status !== 'success') {
+          alert(result.message || 'Checkout gagal');
+          payButton.textContent = 'Bayar';
+          payButton.disabled = false;
+          return;
+        }
+
+        sessionStorage.setItem('paymentResult', JSON.stringify(result.data));
+        window.location.href = '/qris-payment';
+      } catch (error) {
+        console.error('QRIS payment error:', error);
+        alert('Terjadi kesalahan. Silakan coba lagi.');
+        payButton.textContent = 'Bayar';
+        payButton.disabled = false;
+      }
     } else {
-      alert('Metode pembayaran ' + selectedPaymentMethod + ' belum tersedia. Silakan pilih Bank Jago.');
+      alert('Metode pembayaran ' + selectedPaymentMethod + ' belum tersedia. Silakan pilih Bank Jago atau QRIS.');
       payButton.disabled = false;
     }
   });

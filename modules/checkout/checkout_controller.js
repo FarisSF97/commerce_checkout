@@ -199,10 +199,133 @@ const processBankPayment = async (req, res) => {
     }
 };
 
+const processQrisPayment = async (req, res) => {
+    try {
+        const {
+            nama,
+            email,
+            whatsapp,
+            productSlug,
+            productName,
+            quantity,
+            subtotal,
+            discount,
+            totalPrice,
+            isLifetime,
+            kupon
+        } = req.body;
+
+        const currentUser = req.session.user;
+
+        const checkoutPayload = {
+            nama: nama || email.split('@')[0],
+            email: email,
+            no_wa: (whatsapp || '').trim(),
+            password: generateRandomPassword(8),
+            payment_method: 'qris',
+            product_id: productSlug,
+            qty: parseInt(quantity) || 1,
+            kupon: kupon || '',
+            account_id: currentUser?.id || null,
+            cardName: '',
+            cardNumber: '',
+            cardExpiry: ''
+        };
+
+        const checkoutResponse = await axios.post(`${API_BASE_URL}/checkout`, checkoutPayload);
+
+        if (checkoutResponse.data.status !== 'success') {
+            return res.status(checkoutResponse.data.code || 400).json({
+                status: 'failed',
+                message: checkoutResponse.data.message || 'Checkout failed'
+            });
+        }
+
+        const apiData = checkoutResponse.data.data || {};
+        const orderId = apiData.order_id;
+        const invoiceNumber = apiData.invoice || '';
+        const total = apiData.total || parseInt(totalPrice);
+
+        let qrisData = {};
+
+        try {
+            const qrisResponse = await axios.post(`${API_BASE_URL}/qris/create-payment`, {
+                order_id: orderId,
+                amount: total,
+                invoice: invoiceNumber
+            });
+
+            if (qrisResponse.data.status === 'success') {
+                qrisData = qrisResponse.data.data || {};
+            } else {
+                console.error('QRIS creation warning:', qrisResponse.data.message);
+            }
+        } catch (qrisError) {
+            console.error('QRIS creation error:', qrisError.message);
+        }
+
+        const deadline = new Date(Date.now() + 1 * 60 * 60 * 1000);
+        const deadlineStr = deadline.toLocaleDateString('id-ID', {
+            day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+
+        const harga = parseInt(subtotal) / parseInt(quantity) || 0;
+
+        res.json({
+            status: 'success',
+            data: {
+                invoiceNumber,
+                productName,
+                quantity: parseInt(quantity),
+                harga: harga,
+                subtotal: parseInt(subtotal),
+                discount: parseInt(discount) || 0,
+                totalPrice: total,
+                kodeUnik: apiData.kode_unik || 0,
+                orderId: orderId,
+                paymentDeadline: deadlineStr,
+                generatedPassword: apiData.generated_password || null,
+                generatedEmail: apiData.generated_email || null,
+                qris_url: qrisData.qris_url || null,
+                qris_image: qrisData.qris_image || null,
+                qris_expired_at: qrisData.expired_at || null
+            }
+        });
+    } catch (error) {
+        console.error('QRIS payment processing error:', error);
+        const errorMessage = error.response?.data?.message || 'Payment processing failed. Please try again.';
+        res.status(error.response?.status || 500).json({
+            status: 'failed',
+            message: errorMessage
+        });
+    }
+};
+
+const qrisPaymentPage = async (req, res) => {
+    res.render('checkout/qris_payment', { user: req.session.user });
+};
+
+const qrisCheckStatus = async (req, res) => {
+    try {
+        const orderId = req.params.order_id;
+        const apiResponse = await axios.get(`${API_BASE_URL}/qris/status/${orderId}`);
+        res.json(apiResponse.data);
+    } catch (error) {
+        console.error('QRIS status check error:', error);
+        res.status(error.response?.status || 500).json({
+            status: 'failed',
+            message: error.response?.data?.message || 'Failed to check QRIS status'
+        });
+    }
+};
+
 module.exports = {
     index,
     processPayment,
     processBankPayment,
+    processQrisPayment,
+    qrisPaymentPage,
+    qrisCheckStatus,
     thankYou,
     atmEmail,
     atmBanks,
