@@ -91,11 +91,23 @@
 
         .success-message {
             background: #d4edda; border: 1px solid #c3e6cb;
-            border-radius: 8px; padding: 20px; margin-top: 20px;
+            border-radius: 8px; padding: 24px; margin-top: 20px;
             color: #155724;
         }
-        .success-message h3 { margin-bottom: 8px; }
-        .success-message p { font-size: 14px; }
+        .success-message h3 { margin-bottom: 12px; }
+        .success-message p { font-size: 14px; margin-bottom: 6px; }
+        .success-order-info {
+            background: white; border-radius: 6px; padding: 16px;
+            margin: 12px 0; text-align: left;
+        }
+        .success-order-info .s-row {
+            display: flex; justify-content: space-between; padding: 4px 0;
+            font-size: 14px;
+        }
+        .success-order-info .s-label { color: #6b7280; }
+        .success-order-info .s-value { font-weight: 600; }
+        .success-order-info .s-total { font-size: 18px; border-top: 1px solid #d1d5db; padding-top: 8px; margin-top: 4px; }
+        .success-order-info .s-total .s-value { color: #059669; }
 
         .expired-message {
             background: #f8d7da; border: 1px solid #f5c6cb;
@@ -183,7 +195,28 @@
 
             <div id="successMessage" class="success-message" style="display:none;">
                 <h3><i class="fas fa-check-circle"></i> Pembayaran Berhasil!</h3>
-                <p>Pembayaran Anda telah dikonfirmasi. Anda akan dialihkan ke halaman detail pesanan...</p>
+                <div class="success-order-info">
+                    <div class="s-row">
+                        <span class="s-label">Invoice</span>
+                        <span class="s-value" id="sInvoiceDisplay">-</span>
+                    </div>
+                    <div class="s-row">
+                        <span class="s-label">Produk</span>
+                        <span class="s-value" id="sProductDisplay">-</span>
+                    </div>
+                    <div class="s-row">
+                        <span class="s-label">Jumlah</span>
+                        <span class="s-value" id="sQtyDisplay">-</span>
+                    </div>
+                    <div class="s-row s-total">
+                        <span class="s-label">Total Dibayar</span>
+                        <span class="s-value" id="sTotalDisplay">-</span>
+                    </div>
+                </div>
+                <p>Terima kasih, pesanan Anda akan segera diproses.</p>
+                <div style="margin-top:16px;">
+                    <a href="/" class="btn btn-home"><i class="fas fa-arrow-left"></i> Kembali ke Beranda</a>
+                </div>
             </div>
 
             <div id="expiredMessage" class="expired-message" style="display:none;">
@@ -297,15 +330,15 @@
                             statusBadge.innerHTML = '<i class="fas fa-check-circle"></i><span>Pembayaran Berhasil</span>';
 
                             successMsg.style.display = 'block';
+                            document.getElementById('sInvoiceDisplay').textContent = paymentData.invoiceNumber || '-';
+                            document.getElementById('sProductDisplay').textContent = paymentData.productName || '-';
+                            document.getElementById('sQtyDisplay').textContent = paymentData.quantity || '-';
+                            document.getElementById('sTotalDisplay').textContent = fmt(paymentData.totalPrice);
 
                             if (pollInterval) {
                                 clearInterval(pollInterval);
                                 pollInterval = null;
                             }
-
-                            setTimeout(function() {
-                                window.location.href = '/thankyou';
-                            }, 3000);
                         } else if (qrisStatus === 'EXPIRED' || expired) {
                             statusBadge.className = 'status-badge expired';
                             statusBadge.innerHTML = '<i class="fas fa-times-circle"></i><span>Kadaluarsa</span>';
