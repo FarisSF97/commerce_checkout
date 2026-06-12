@@ -5,10 +5,12 @@ const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:5100';
 
 const auth = {
   login: (req, res) => {
+    if (req.session.user) return res.redirect('/account');
     res.render('auth/views/login');
   },
 
   register: (req, res) => {
+    if (req.session.user) return res.redirect('/account');
     res.render('auth/views/register');
   },
 
