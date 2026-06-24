@@ -93,7 +93,7 @@ const auth = {
 
     try {
       const apiResponse = await axios.get(`${API_BASE_URL}/me`, {
-        params: { email: user.email },
+        params: { id: user.id },
         withCredentials: true
       });
       if (apiResponse.data.status === 'success' && apiResponse.data.data) {
