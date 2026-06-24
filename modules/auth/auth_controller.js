@@ -89,9 +89,21 @@ const auth = {
     }
 
     const user = req.session.user;
-
     const memberBaseUrl = process.env.MEMBER_BASE_URL || 'http://localhost:4500';
-    res.render('auth/views/account', { user, memberBaseUrl });
+
+    try {
+      const apiResponse = await axios.get(`${API_BASE_URL}/me`, {
+        params: { email: user.email },
+        withCredentials: true
+      });
+      if (apiResponse.data.status === 'success' && apiResponse.data.data) {
+        Object.assign(req.session.user, apiResponse.data.data);
+      }
+    } catch (error) {
+      console.error('Refresh profile error:', error);
+    }
+
+    res.render('auth/views/account', { user: req.session.user, memberBaseUrl });
   },
 
   activate: async (req, res) => {
