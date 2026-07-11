@@ -2,6 +2,7 @@ const path = require('path');
 const axios = require('axios');
 
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:5100';
+const HOME_BASE_URL = process.env.HOME_BASE_URL || 'https://sf97.my.id';
 
 function generateRandomPassword(length) {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -13,7 +14,7 @@ function generateRandomPassword(length) {
 }
 
 const index = async (req,res) => {
-    res.render('checkout/index', { user: req.session.user });
+    res.render('checkout/index', { user: req.session.user, homeBaseUrl: HOME_BASE_URL });
 };
 
 const processPayment = async (req, res) => {
